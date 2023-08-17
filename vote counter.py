@@ -1,23 +1,34 @@
 import names
 import random
-import sys
 
 class Ballot():
-    def __init__(self, firstChoice, secondChoice, thirdChoice):
+    def __init__(self, firstChoice, secondChoice, thirdChoice, fourthChoice):
         self.firstChoice = firstChoice
         self.secondChoice = secondChoice
         self.thirdCHoice = thirdChoice
+        self.fourthChoice = fourthChoice
 
 def main():
-    candidates = createCandidates(5)
+    candidates = createCandidates()
     ballots = createBallots(100, candidates)
-    candidates_afterFirstElim = elim_lowFirstChoice(candidates, ballots)
 
-def createCandidates(numCandidates):
+    # sort ballots by first choice vote
+    sortedBallots = sortBallots(ballots, candidates)
+    print(sortedBallots)
+    # eliminate candidate with least first choice votes
+    # add second choice votes to other candidates
+
+    # check for winner
+
+    # eliminate the candidate with the least first choice votes
+
+    # assign votes of eliminated candidates to highest ranked remaining candidate
+
+def createCandidates():
     candidates = []
 
-    # assign random name to candidate
-    for i in range (numCandidates):
+    # assign random name to 4 candidates
+    for i in range (4):
         name = names.get_full_name
         candidates.append(name)
 
@@ -26,43 +37,30 @@ def createCandidates(numCandidates):
 def createBallots(numBallots, candidates):
     ballots = []
 
-    # create three random unique votes
+    # create four random unique votes
     for i in range (numBallots):
-        randInt1 = getRandInt(0, len(candidates), -1, -1)
-        randInt2 = getRandInt(0, len(candidates), randInt1, -1)
-        randInt3 = getRandInt(0, len(candidates), randInt1, randInt2)
+        randInt1 = getRandInt(0, len(candidates), -1, -1, -1)
+        randInt2 = getRandInt(0, len(candidates), randInt1, -1, -1)
+        randInt3 = getRandInt(0, len(candidates), randInt1, randInt2, -1)
+        randInt4 = getRandInt(0, len(candidates), randInt1, randInt2, randInt3, randInt4)
 
-        ballot = Ballot(candidates[randInt1], candidates[randInt2], candidates[randInt3])
+        ballot = Ballot(candidates[randInt1], candidates[randInt2], candidates[randInt3], candidates[randInt4])
         ballots.append(ballot)
     
     return ballots
 
-def elim_lowFirstChoice(candidates, ballots):
-    # create list to tally votes
-    votes = [None for _ in range(len(candidates))]
-    ballotsFirstChoice = [None for _ in range(len(candidates))]
+def sortBallots(ballots, candidates):
+    sortedBallots = {}
 
-    # iterate through ballots
     for ballot in ballots:
-        vote = ballot.firstChoice
-        index = candidates.index(vote)
-        votes[index] += 1
-    
-    # eliminate candidate with lowest number of votes
-    min = sys.maxsize
-    indexLowest = -1
+        firstChoice = ballot.firstChoice
+        index_toAppend = candidates.index(firstChoice in candidates)
+        sortBallots[index_toAppend].append(ballot)
 
-    for i in range (len(votes)):
-        if votes[i] < min:
-            min = votes[i]
+    return sortedBallots
 
-    indexLowest = votes.index(min)
-    newCandidates = candidates
-    del newCandidates[indexLowest]
-    return newCandidates
-
-def getRandInt(start, stop, exclude, exclude1):
+def getRandInt(start, end, exclude1, exclude2, exclude3):
     while True:
-        num = random.randint(start, stop)
-        if num != (exclude or exclude1):
-            return num
+        random_value = random.randint(start, end)
+        if random_value not in (exclude1 or exclude2 or exclude3):
+            return random_value
